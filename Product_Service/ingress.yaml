@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: basketeer-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: basketeer.local
+    http:
+      paths:
+      - path: /api/order(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ordserv
+            port:
+              number: 8080
+      - path: /api/product(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: prodserv
+            port:
+              number: 8080
+      - path: /api/customer(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: custserv
+            port:
+              number: 8082
+      - path: /api/cart(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: cartserv
+            port:
+              number: 8080
+      - path: /api/address(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: addrserv
+            port:
+              number: 8080

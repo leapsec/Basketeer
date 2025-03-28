@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prodservdep
+spec:
+  selector:
+    matchLabels:
+      app: prodserv
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prodserv
+    spec:
+      containers:
+        - name: prodserv
+          image: prodserv:vf
+          ports:
+            - containerPort: 8083
+          imagePullPolicy: Never
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: prodserv
+spec:
+  selector:
+    app: prodserv
+  ports:
+    - protocol: "TCP"
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8083 # The port exposed by the service
+  type: ClusterIP # type of the service.
